@@ -1,4 +1,4 @@
-# 42-multilayer-percepton
+# 42-multilayer-perceptron
 A machine learning project from the 42 school
 
 ```
