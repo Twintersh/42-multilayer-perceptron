@@ -14,7 +14,6 @@ class MultilayerPerceptron:
 			input_arr = res
 		return res
 
-
 	def calculate_loss(self, x, label):
 		res = self.predict(x)
 		return self.loss_layer.forward(res, label)

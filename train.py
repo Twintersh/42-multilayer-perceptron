@@ -2,6 +2,7 @@ import pandas as pd
 from typing import Tuple
 import numpy as np
 import os
+import random
 from layers import Affine, BinaryCrossEntropy, Sigmoid, Softmax
 from network import MultilayerPerceptron
 from sklearn.preprocessing import StandardScaler
@@ -13,7 +14,9 @@ def main():
 	pred_label) 		= getDataFromDataset("datasets")
 	input_size 			= len(train_data)
 	hidden_layer_size 	= 20
-	l_rate 				= 0.001
+	l_rate 				= 0.01
+	batch_size			= 50
+	epochs				= 1000
 
 	# setting the layers
 	input_layer_a = Affine(30, hidden_layer_size, l_rate) # why do the input size is not the len of the batch ???
@@ -27,13 +30,19 @@ def main():
 	mlp = MultilayerPerceptron(layers, loss_layer, input_size)
 
 	# creating batches
+	for i in range(epochs):
+		rand_index = random.sample(range(len(train_data)), batch_size)
+		batch_data = np.array([train_data[j] for j in rand_index])
+		batch_label = np.array([train_label[j] for j in rand_index])
 
-	# Learning 🧠
-	loss = 0
-	for _ in range(100):
-		loss = mlp.calculate_loss(train_data, train_label)
-		mlp.backward(train_label)
-	print(loss)
+		# Learning 🧠
+		loss = 0
+		for _ in range(100):
+			loss = mlp.calculate_loss(train_data, train_label)
+			mlp.backward(train_label)
+		print(loss)
+
+
 
 def setLabelsValues(label_array: np.array) -> np.array:
 	label_mapping = {'M': 1, 'B': 0}
