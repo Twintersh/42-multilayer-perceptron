@@ -1,7 +1,7 @@
 import os
 from random import random
 
-a = 0.90 # separator factor
+a = 0.05 # separator factor (1 to put everything into the train dataset)
 
 def linecount(file_path):
 	with open(file_path, 'r') as f:
