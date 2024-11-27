@@ -40,7 +40,7 @@ def getData(foldername: str) -> Tuple[np.array, np.array, np.array, np.array]:
 	pred_data = dataset_predict.to_numpy()[:,2:]
 	pred_label = dataset_predict.to_numpy()[:,1]
 	return (train_data, train_label, pred_data, pred_label)
-
+	
 
 if __name__ == "__main__":
 	main()
