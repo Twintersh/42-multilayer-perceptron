@@ -10,7 +10,6 @@ class MultilayerPerceptron:
 	def predict(self, x):
 		input_arr = x
 		for layer in self.layers:
-			print(f"🔥 here")
 			res = layer.forward(input_arr)
 			input_arr = res
 		return res

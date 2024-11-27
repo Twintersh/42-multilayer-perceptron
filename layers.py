@@ -29,7 +29,6 @@ class Sigmoid:
 		self.out = None
 
 	def forward(self, x):
-		print(x)
 		res = 1 / (1 + np.exp(-x))
 		self.out = res
 		return (res)
@@ -51,6 +50,7 @@ class Softmax:
 		exp_sum = np.sum(np.exp(x), axis=1)
 		for i in range(x.shape[0]):
 			x[i, :] = np.exp(x[i, :]) / exp_sum[i]
+		self.x = x
 		return x
 
 	def backward(self, label):
@@ -60,20 +60,19 @@ class Softmax:
 			else:
 				self.dx[i] = np.array([self.x[i, 0] - 0, self.x[i, 1] - 1])
 		return self.dx
-
 	# def save_parameters(self, params):
 
 class BinaryCrossEntropy:
-    def forward(self, x, label):
-        loss_sum = 0
-        for i in range(x.shape[0]):
-            prob = x[i, :][0]
-            loss_sum += label[i] * np.log(prob) + (1 - label[i]) * np.log(1 - prob)
+	def forward(self, x, label):
+		loss_sum = 0
+		for i in range(x.shape[0]):
+			prob = x[i, :][0]
+			loss_sum += label[i] * np.log(prob) + (1 - label[i]) * np.log(1 - prob)
 
-        return (-1) * loss_sum / x.shape[0]
+		return (-1) * loss_sum / x.shape[0]
 
-    # def save_parameters(self, params):
-    #     param_dict = {}
-    #     param_dict["layer"] = "BinaryCrossEntropy"
-    #     params.append(param_dict)
-    #     return params
+	# def save_parameters(self, params):
+	#     param_dict = {}
+	#     param_dict["layer"] = "BinaryCrossEntropy"
+	#     params.append(param_dict)
+	#     return params
