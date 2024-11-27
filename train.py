@@ -26,12 +26,14 @@ def main():
 	# init the MLP with the appropriate layers
 	mlp = MultilayerPerceptron(layers, loss_layer, input_size)
 
-	# creating batches 
+	# creating batches
+
 	# Learning 🧠
+	loss = 0
 	for _ in range(100):
 		loss = mlp.calculate_loss(train_data, train_label)
 		mlp.backward(train_label)
-		print(loss)
+	print(loss)
 
 def setLabelsValues(label_array: np.array) -> np.array:
 	label_mapping = {'M': 1, 'B': 0}
