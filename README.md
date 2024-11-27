@@ -13,3 +13,4 @@ A machine learning project from the 42 school
 		i) symmetry
 		j) fractal dimension ("coastline approximation" - 1)
 ```
+test
