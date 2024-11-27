@@ -21,7 +21,7 @@ class Affine:
 		# calculates the loss
 		res = np.dot(dx, self.w.T)
 		return (res)
-	
+
 	# def save_parameters():
 
 class Sigmoid:
@@ -36,7 +36,7 @@ class Sigmoid:
 	def backward(self, dx):
 		res = dx * (1 - self.out) * self.out
 		return res
-	
+
 	# def save_parameters():
 
 class Softmax:
@@ -54,11 +54,15 @@ class Softmax:
 		return x
 
 	def backward(self, label):
+		print(len(label))
 		for i in range(self.x.shape[0]):
 			if label[i] == 1:
 				self.dx[i] = np.array([self.x[i, 0] - 1, self.x[i, 1] - 0])
 			else:
 				self.dx[i] = np.array([self.x[i, 0] - 0, self.x[i, 1] - 1])
+			print(i)
+		print(len(self.dx))
+		exit(42)
 		return self.dx
 	# def save_parameters(self, params):
 

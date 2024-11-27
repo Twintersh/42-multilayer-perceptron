@@ -29,18 +29,18 @@ def main():
 	# init the MLP with the appropriate layers
 	mlp = MultilayerPerceptron(layers, loss_layer, input_size)
 
-	# creating batches
 	for i in range(epochs):
+		# creating batches
 		rand_index = random.sample(range(len(train_data)), batch_size)
 		batch_data = np.array([train_data[j] for j in rand_index])
 		batch_label = np.array([train_label[j] for j in rand_index])
 
 		# Learning 🧠
-		loss = 0
-		for _ in range(100):
-			loss = mlp.calculate_loss(train_data, train_label)
-			mlp.backward(train_label)
-		print(loss)
+		loss = mlp.calculate_loss(batch_data, batch_label)
+		mlp.backward(batch_label)
+		if (i % 100):
+			print(loss)
+		print(f"🔥 here")
 
 
 
