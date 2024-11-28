@@ -15,7 +15,7 @@ def main():
 	hidden_layer_size 	= 20
 	l_rate 				= 1e-3
 	batch_size			= 50
-	iterate				= 50 # number of times we go through the dataset
+	iterate				= 10000 # number of times we go through the dataset
 	epochs				= int(len(train_data) / batch_size) + 1
 
 	# setting the layers
@@ -32,7 +32,9 @@ def main():
 	# init the MLP with the appropriate layers
 	mlp = MultilayerPerceptron(layers, loss_layer, batch_size)
 
-	for i in range(iterate):
+	nb_epoch = 0
+	print(iterate * epochs)
+	for i in range(iterate * epochs):
 		# creating batches
 		rand_index = random.sample(range(len(train_data)), batch_size)
 		batch_data = np.array([train_data[j] for j in rand_index])
@@ -42,8 +44,9 @@ def main():
 		loss = mlp.calculate_loss(batch_data, batch_label)
 		mlp.backward(batch_label)
 		# each time i go through the entire dataset (approximation), print loss
-		if (not (i % len(train_data))):
-			print(f"loss: {loss} i: {i}")
+		if (not (i % epochs)):
+			nb_epoch += 1
+			print(f"epoch : {nb_epoch}/{iterate} loss: {loss}")
 
 	test = mlp.predict(pred_data)
 	for i in range(len(test)):
