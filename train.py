@@ -15,7 +15,8 @@ def main():
 	hidden_layer_size 	= 20
 	l_rate 				= 1e-3
 	batch_size			= 50
-	epochs				= len(train_data) * 150
+	iterate				= 50 # number of times we go through the dataset
+	epochs				= int(len(train_data) / batch_size) + 1
 
 	# setting the layers
 	layers = [
@@ -31,7 +32,7 @@ def main():
 	# init the MLP with the appropriate layers
 	mlp = MultilayerPerceptron(layers, loss_layer, batch_size)
 
-	for i in range(epochs):
+	for i in range(iterate):
 		# creating batches
 		rand_index = random.sample(range(len(train_data)), batch_size)
 		batch_data = np.array([train_data[j] for j in rand_index])
@@ -40,12 +41,17 @@ def main():
 		# Learning 🧠
 		loss = mlp.calculate_loss(batch_data, batch_label)
 		mlp.backward(batch_label)
-		if (not (i % 500)):
+		# each time i go through the entire dataset (approximation), print loss
+		if (not (i % len(train_data))):
 			print(f"loss: {loss} i: {i}")
 
 	test = mlp.predict(pred_data)
 	for i in range(len(test)):
 		print(f"{test[i][0]:.1f} {pred_label[i]}")
+
+#
+#	UTILS
+#
 
 def setLabelsValues(label_array: np.array) -> np.array:
 	label_mapping = {'M': 1, 'B': 0}
@@ -78,5 +84,6 @@ def getDataFromDataset(foldername: str) -> Tuple[np.array, np.array, np.array, n
 	return (train_data, train_label, pred_data, pred_label)
 
 
+# call main
 if __name__ == "__main__":
 	main()
