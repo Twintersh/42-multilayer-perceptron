@@ -9,7 +9,7 @@ def linecount(file_path):
 
 if __name__ == "__main__":
 	datasets_dir = "datasets"
-	os.makedirs("datasets", exist_ok=True)
+	os.makedirs(datasets_dir, exist_ok=True)
 
 	source_file		= "data.csv"
 	train_file		= os.path.join(datasets_dir, "train.csv")

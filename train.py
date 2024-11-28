@@ -1,13 +1,10 @@
-import pandas as pd
-from typing import Tuple
 import numpy as np
-import os
 import random
 from layers import Affine, BinaryCrossEntropy, Sigmoid, Softmax
 from network import MultilayerPerceptron
-from sklearn.preprocessing import StandardScaler
+from  utils import getDataFromDataset
 
-def main():
+def train():
 	(train_data,
 	train_label,
 	pred_data,
@@ -33,7 +30,6 @@ def main():
 	mlp = MultilayerPerceptron(layers, loss_layer, batch_size)
 
 	nb_epoch = 0
-	print(iterate * epochs)
 	for i in range(iterate * epochs):
 		# creating batches
 		rand_index = random.sample(range(len(train_data)), batch_size)
@@ -44,49 +40,15 @@ def main():
 		loss = mlp.calculate_loss(batch_data, batch_label)
 		mlp.backward(batch_label)
 		# each time i go through the entire dataset (approximation), print loss
-		if (not (i % epochs)):
+		if not i % epochs:
+			if not i % (epochs * 100):
+				print(f"epoch : {nb_epoch}/{iterate} loss: {loss}")
 			nb_epoch += 1
-			print(f"epoch : {nb_epoch}/{iterate} loss: {loss}")
 
 	test = mlp.predict(pred_data)
 	for i in range(len(test)):
-		print(f"{test[i][0]:.1f} {pred_label[i]}")
-
-#
-#	UTILS
-#
-
-def setLabelsValues(label_array: np.array) -> np.array:
-	label_mapping = {'M': 1, 'B': 0}
-	try:
-		return np.array([label_mapping[label] for label in label_array])
-	except KeyError:
-		exit(1)
-
-def normalizeData(data: np.array) -> np.array:
-	data_scaler = StandardScaler()
-	return data_scaler.fit_transform(data)
-
-def getDataFromDataset(foldername: str) -> Tuple[np.array, np.array, np.array, np.array]:
-	train_folder	 = os.path.join(foldername, "train.csv")
-	predict_folder	 = os.path.join(foldername, "predict.csv")
-
-	dataset_train	 = pd.read_csv(train_folder, header=None)
-	dataset_predict	 = pd.read_csv(predict_folder, header=None)
-
-	tmp_train_label	= dataset_train.to_numpy()[:,1]
-	tmp_pred_label	= dataset_predict.to_numpy()[:,1]
-	train_label		= setLabelsValues(tmp_train_label)
-	pred_label		= setLabelsValues(tmp_pred_label)
-
-	tmp_train_data	= dataset_train.to_numpy()[:,2:]
-	tmp_pred_data	= dataset_predict.to_numpy()[:,2:]
-	train_data		= normalizeData(tmp_train_data)
-	pred_data		= normalizeData(tmp_pred_data)
-
-	return (train_data, train_label, pred_data, pred_label)
-
+		print(f"{pred_label[i]} : {test[i][0]:.1f}")
 
 # call main
 if __name__ == "__main__":
-	main()
+	train()
