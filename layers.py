@@ -54,15 +54,11 @@ class Softmax:
 		return x
 
 	def backward(self, label):
-		print(len(label))
 		for i in range(self.x.shape[0]):
 			if label[i] == 1:
 				self.dx[i] = np.array([self.x[i, 0] - 1, self.x[i, 1] - 0])
 			else:
 				self.dx[i] = np.array([self.x[i, 0] - 0, self.x[i, 1] - 1])
-			print(i)
-		print(len(self.dx))
-		exit(42)
 		return self.dx
 	# def save_parameters(self, params):
 
@@ -80,3 +76,8 @@ class BinaryCrossEntropy:
 	#     param_dict["layer"] = "BinaryCrossEntropy"
 	#     params.append(param_dict)
 	#     return params
+
+# /home/twinters/42-multilayer-perceptron/layers.py:70: RuntimeWarning: divide by zero encountered in log
+#   loss_sum += label[i] * np.log(prob) + (1 - label[i]) * np.log(1 - prob)
+# /home/twinters/42-multilayer-perceptron/layers.py:70: RuntimeWarning: invalid value encountered in scalar multiply
+#   loss_sum += label[i] * np.log(prob) + (1 - label[i]) * np.log(1 - prob)

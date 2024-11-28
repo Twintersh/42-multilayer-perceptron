@@ -12,22 +12,24 @@ def main():
 	train_label,
 	pred_data,
 	pred_label) 		= getDataFromDataset("datasets")
-	input_size 			= len(train_data)
 	hidden_layer_size 	= 20
-	l_rate 				= 0.01
+	l_rate 				= 1e-3
 	batch_size			= 50
-	epochs				= 1000
+	epochs				= len(train_data) * 150
 
 	# setting the layers
-	input_layer_a = Affine(30, hidden_layer_size, l_rate) # why do the input size is not the len of the batch ???
-	input_layer_b = Sigmoid()
-	hidden_layer_a = Affine(hidden_layer_size, 2, l_rate)
-	hidden_layer_b = Softmax(input_size, 2)
+	layers = [
+		Affine(30, hidden_layer_size, l_rate), # Input layer
+		Sigmoid(),
+		Affine(hidden_layer_size, hidden_layer_size, l_rate), # hidden layer
+		Sigmoid(),
+		Affine(hidden_layer_size, 2, l_rate), # Hidden layer
+		Softmax(batch_size, 2)
+	]
 	loss_layer = BinaryCrossEntropy()
-	layers = [input_layer_a, input_layer_b, hidden_layer_a, hidden_layer_b]
 
 	# init the MLP with the appropriate layers
-	mlp = MultilayerPerceptron(layers, loss_layer, input_size)
+	mlp = MultilayerPerceptron(layers, loss_layer, batch_size)
 
 	for i in range(epochs):
 		# creating batches
@@ -38,18 +40,19 @@ def main():
 		# Learning 🧠
 		loss = mlp.calculate_loss(batch_data, batch_label)
 		mlp.backward(batch_label)
-		if (i % 100):
-			print(loss)
-		print(f"🔥 here")
+		if (not (i % 500)):
+			print(f"loss: {loss} i: {i}")
 
-
+	test = mlp.predict(pred_data)
+	for i in range(len(test)):
+		print(f"{test[i][0]:.1f} {pred_label[i]}")
 
 def setLabelsValues(label_array: np.array) -> np.array:
 	label_mapping = {'M': 1, 'B': 0}
 	try:
 		return np.array([label_mapping[label] for label in label_array])
 	except KeyError:
-		exit(42)
+		exit(1)
 
 def normalizeData(data: np.array) -> np.array:
 	data_scaler = StandardScaler()
