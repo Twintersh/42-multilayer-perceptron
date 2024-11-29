@@ -11,7 +11,7 @@ def linecount(file_path):
 		return sum(1 for _ in f)
 
 if __name__ == "__main__":
-	datasets_dir = parser.parse_args().database_path
+	datasets_dir = parser.parse_args().path
 	os.makedirs(datasets_dir, exist_ok=True)
 
 	source_file		= "data.csv"
