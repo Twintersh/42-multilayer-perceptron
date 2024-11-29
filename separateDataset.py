@@ -2,17 +2,23 @@ import os
 from random import random
 import argparse
 import shelve
+import sys
 
 a = 0.90 # separator factor (1 to put everything into the train dataset)
 parser = argparse.ArgumentParser(description="A program that splits a DataSet")
 parser.add_argument("-p", "--path", type=str, help="The location you want to store splited database")
+parser.add_argument("-a", "--split_factor", type=int, help="split factor (1 to put everything into the train dataset)")
 
 def linecount(file_path):
 	with open(file_path, 'r') as f:
 		return sum(1 for _ in f)
 
 if __name__ == "__main__":
-	datasets_dir = parser.parse_args().path
+	args = parser.parse_args()
+	if len(sys.argv) == 1:
+		parser.print_usage()
+		sys.exit()
+	datasets_dir = args.path
 	file = shelve.open(".save_parameters")
 	file["datasets_dir"] = datasets_dir
 	os.makedirs(datasets_dir, exist_ok=True)
