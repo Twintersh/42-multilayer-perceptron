@@ -1,6 +1,7 @@
 import os
 from random import random
 import argparse
+import shelve
 
 a = 0.90 # separator factor (1 to put everything into the train dataset)
 parser = argparse.ArgumentParser(description="A program that splits a DataSet")
@@ -12,6 +13,8 @@ def linecount(file_path):
 
 if __name__ == "__main__":
 	datasets_dir = parser.parse_args().path
+	file = shelve.open(".save_parameters")
+	file["datasets_dir"] = datasets_dir
 	os.makedirs(datasets_dir, exist_ok=True)
 
 	source_file		= "data.csv"

@@ -3,12 +3,14 @@ import random
 from layers import Affine, BinaryCrossEntropy, Sigmoid, Softmax
 from network import MultilayerPerceptron
 from  utils import getDataFromDataset
+import shelve
 
 def train():
+	save_file = shelve.open(".save_parameters")
 	(train_data,
 	train_label,
 	pred_data,
-	pred_label) 		= getDataFromDataset("datasets")
+	pred_label) 		= getDataFromDataset(save_file["datasets_dir"])
 	hidden_layer_size 	= 20
 	l_rate 				= 1e-3
 	batch_size			= 50
