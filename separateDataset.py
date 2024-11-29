@@ -1,14 +1,17 @@
 import os
 from random import random
+import argparse
 
 a = 0.90 # separator factor (1 to put everything into the train dataset)
+parser = argparse.ArgumentParser(description="A program that splits a DataSet")
+parser.add_argument("-p", "--path", type=str, help="The location you want to store splited database")
 
 def linecount(file_path):
 	with open(file_path, 'r') as f:
 		return sum(1 for _ in f)
 
 if __name__ == "__main__":
-	datasets_dir = "datasets"
+	datasets_dir = parser.parse_args().database_path
 	os.makedirs(datasets_dir, exist_ok=True)
 
 	source_file		= "data.csv"

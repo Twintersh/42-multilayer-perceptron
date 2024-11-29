@@ -1,12 +1,18 @@
-import numpy as np
+import argparse
 
-def normalizeData(data: np.array) -> np.array:
-	from sklearn.preprocessing import StandardScaler
-	
-	data_scaler = StandardScaler()
-	return data_scaler.fit_transform(data)
+# Initialize parser
+parser = argparse.ArgumentParser(description="A program that processes arguments.")
 
-data = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
-print(data)
-normalized_data = normalizeData(data)
-print(normalized_data)
+# Adding arguments
+parser.add_argument("-n", "--name", type=str, help="Your name")
+parser.add_argument("-a", "--ageee", type=int, help="Your age")
+parser.add_argument("--verbose", action="store_true", help="Enable verbose mode")
+
+# Parse arguments
+args = parser.parse_args()
+
+# Access the arguments
+print(f"Name: {args.name}")
+print(f"Age: {args.age}")
+if args.verbose:
+    print("Verbose mode is enabled!")
