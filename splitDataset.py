@@ -4,10 +4,10 @@ import argparse
 import shelve
 import sys
 
-a = 0.90 # separator factor (1 to put everything into the train dataset)
+a = 0.90 # default split
 parser = argparse.ArgumentParser(description="A program that splits a DataSet")
 parser.add_argument("-p", "--path", type=str, help="The location you want to store splited database")
-parser.add_argument("-a", "--split_factor", type=int, help="split factor (1 to put everything into the train dataset)")
+parser.add_argument("-a", "--split_factor", type=float, help="split factor (default value 0.9)")
 
 def linecount(file_path):
 	with open(file_path, 'r') as f:
@@ -19,6 +19,8 @@ if __name__ == "__main__":
 		parser.print_usage()
 		sys.exit()
 	datasets_dir = args.path
+	if args.split_factor  is not None:
+		a = args.split_factor
 	file = shelve.open(".save_parameters")
 	file["datasets_dir"] = datasets_dir
 	os.makedirs(datasets_dir, exist_ok=True)
