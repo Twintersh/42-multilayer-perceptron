@@ -3,6 +3,7 @@ import random
 from layers import BinaryCrossEntropy, Sigmoid, Softmax, Layer
 from network import MultilayerPerceptron
 from utils import getDataFromDataset
+import matplotlib.pyplot as plt
 import shelve
 
 def train():
@@ -16,6 +17,8 @@ def train():
 	batch_size			= 50
 	iterate				= 5000 # number of times we go through the dataset
 	epochs				= int(len(train_data) / batch_size) + 1
+	loss_history = []
+	epochs_history = []
 
 	# setting the layers
 	layers = [
@@ -47,7 +50,15 @@ def train():
 			if not i % (epochs * 100) or i == (iterate * epochs) - 1:
 				print(f"epoch : {nb_epoch}/{iterate} loss: {loss}")
 			nb_epoch += 1
+			loss_history.append(loss)
+			epochs_history.append(i / epochs)
 	save_file["network"] = mlp
+	plt.plot(loss_history, epochs_history, color='red')
+	plt.title("loss function by epoch")
+	plt.xlabel('epochs')
+	plt.ylabel('Loss')
+	plt.show()
+
 
 # call main
 if __name__ == "__main__":
