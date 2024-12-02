@@ -18,7 +18,18 @@ def train():
 	epochs				= int(len(train_data) / batch_size) + 1
 
 	# setting the layers
+	# layers = [
+	# 	Affine(hidden_layer_size, l_rate), # Input layer
+	# 	Sigmoid(),
+	# 	Affine(hidden_layer_size, l_rate), # hidden layer
+	# 	Sigmoid(),
+	# 	Affine(2, l_rate), # Hidden layer
+	# 	Softmax(batch_size, 2)
+	# ]
+	# loss_layer = BinaryCrossEntropy()
 	layers = [
+		Affine(30, hidden_layer_size, l_rate), # Input layer
+		Sigmoid(),
 		Affine(hidden_layer_size, hidden_layer_size, l_rate), # hidden layer
 		Sigmoid(),
 		Affine(hidden_layer_size, 2, l_rate), # Hidden layer

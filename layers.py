@@ -1,6 +1,29 @@
 import numpy as np
 
-class Affine:
+# class Layer:
+# 	def __init__(self, ActivationFunction, input_size, output_size, l_rate):
+# 		self.affine = Affine(input_size, output_size, l_rate)
+# 		self.activation_fonction = ActivationFunction()
+
+# 	def forward(self, x):
+# 		res = self.affine.forward(x)
+# 		return self.activation_fonction.forward(res)
+
+# 	def backward(self, dx):
+# 		res = self.activation_function.backward(dx)
+# 		return self.affine.backward(res)
+
+
+class ActivationFunction:
+	def forward (self, x):
+		# need to be set up
+		return x
+
+	def backward (self, dx):
+		# need to be set up
+		return dx
+
+class Affine(ActivationFunction):
 	def __init__(self, input_size, output_size, l_rate):
 		self.x = None
 		self.w = np.random.randn(input_size, output_size) / np.sqrt(input_size) # ?
@@ -23,8 +46,32 @@ class Affine:
 		return (res)
 
 	# def save_parameters():
+	# def __init__(self, output_size, l_rate):
+	# 	self.x = None
+	# 	self.w = None
+	# 	self.b = np.zeros(output_size) # ?
+	# 	self.lr_rate = l_rate
+	# 	self.output_size = output_size
 
-class Sigmoid:
+	# def forward(self, x):
+	# 	self.x = x # too big values
+	# 	input_size = x.shape[1]
+	# 	if self.w is None:
+	# 		self.w = np.random.randn(input_size, self.output_size) / np.sqrt(input_size)
+	# 	return np.dot(x, self.w) + self.b
+
+	# def backward(self, dx):
+	# 	dw = np.dot(self.x.T, dx)
+	# 	db = np.sum(dx, axis=0)
+	# 	self.w = self.w - np.dot(self.lr_rate, dw)
+	# 	self.b = self.b - np.dot(self.lr_rate, db)
+	# 	# calculates the loss
+	# 	res = np.dot(dx, self.w.T)
+	# 	return (res)
+
+	# # def save_parameters():
+
+class Sigmoid(ActivationFunction):
 	def __init__(self):
 		self.out = None
 
@@ -39,7 +86,7 @@ class Sigmoid:
 
 	# def save_parameters():
 
-class Softmax:
+class Softmax(ActivationFunction):
 	def __init__(self, input_size, output_size):
 		self.x = None
 		self.dx = np.zeros((input_size, output_size))
