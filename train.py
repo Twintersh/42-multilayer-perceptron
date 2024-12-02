@@ -19,7 +19,7 @@ def train():
 
 	# setting the layers
 	layers = [
-c		Affine(hidden_layer_size, hidden_layer_size, l_rate), # hidden layer
+		Affine(hidden_layer_size, hidden_layer_size, l_rate), # hidden layer
 		Sigmoid(),
 		Affine(hidden_layer_size, 2, l_rate), # Hidden layer
 		Softmax(batch_size, 2)
