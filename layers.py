@@ -1,17 +1,17 @@
 import numpy as np
 
-# class Layer:
-# 	def __init__(self, ActivationFunction, input_size, output_size, l_rate):
-# 		self.affine = Affine(input_size, output_size, l_rate)
-# 		self.activation_fonction = ActivationFunction()
+class Layer:
+	def __init__(self, ActivationFunction, output_size, l_rate):
+		self.affine = Affine(output_size, l_rate)
+		self.activation_function = ActivationFunction()
 
-# 	def forward(self, x):
-# 		res = self.affine.forward(x)
-# 		return self.activation_fonction.forward(res)
+	def forward(self, x):
+		res = self.affine.forward(x)
+		return self.activation_function.forward(res)
 
-# 	def backward(self, dx):
-# 		res = self.activation_function.backward(dx)
-# 		return self.affine.backward(res)
+	def backward(self, dx):
+		res = self.activation_function.backward(dx)
+		return self.affine.backward(res)
 
 
 class ActivationFunction:
@@ -24,16 +24,18 @@ class ActivationFunction:
 		return dx
 
 class Affine(ActivationFunction):
-	def __init__(self, input_size, output_size, l_rate):
+	def __init__(self, output_size, l_rate):
 		self.x = None
-		self.w = np.random.randn(input_size, output_size) / np.sqrt(input_size) # ?
+		self.w = None
 		self.b = np.zeros(output_size) # ?
-		self.input_size = input_size
-		self.output_size = output_size
 		self.lr_rate = l_rate
+		self.output_size = output_size
 
 	def forward(self, x):
 		self.x = x # too big values
+		input_size = x.shape[1]
+		if self.w is None:
+			self.w = np.random.randn(input_size, self.output_size) / np.sqrt(input_size)
 		return np.dot(x, self.w) + self.b
 
 	def backward(self, dx):
@@ -46,30 +48,6 @@ class Affine(ActivationFunction):
 		return (res)
 
 	# def save_parameters():
-	# def __init__(self, output_size, l_rate):
-	# 	self.x = None
-	# 	self.w = None
-	# 	self.b = np.zeros(output_size) # ?
-	# 	self.lr_rate = l_rate
-	# 	self.output_size = output_size
-
-	# def forward(self, x):
-	# 	self.x = x # too big values
-	# 	input_size = x.shape[1]
-	# 	if self.w is None:
-	# 		self.w = np.random.randn(input_size, self.output_size) / np.sqrt(input_size)
-	# 	return np.dot(x, self.w) + self.b
-
-	# def backward(self, dx):
-	# 	dw = np.dot(self.x.T, dx)
-	# 	db = np.sum(dx, axis=0)
-	# 	self.w = self.w - np.dot(self.lr_rate, dw)
-	# 	self.b = self.b - np.dot(self.lr_rate, db)
-	# 	# calculates the loss
-	# 	res = np.dot(dx, self.w.T)
-	# 	return (res)
-
-	# # def save_parameters():
 
 class Sigmoid(ActivationFunction):
 	def __init__(self):
@@ -87,13 +65,13 @@ class Sigmoid(ActivationFunction):
 	# def save_parameters():
 
 class Softmax(ActivationFunction):
-	def __init__(self, input_size, output_size):
+	def __init__(self):
 		self.x = None
-		self.dx = np.zeros((input_size, output_size))
-		self.input_size = input_size
-		self.output_size = output_size
+		self.dx = None
 
 	def forward(self, x):
+		self.dx = np.zeros((x.shape[0], x.shape[1]))
+
 		exp_sum = np.sum(np.exp(x), axis=1)
 		for i in range(x.shape[0]):
 			x[i, :] = np.exp(x[i, :]) / exp_sum[i]
