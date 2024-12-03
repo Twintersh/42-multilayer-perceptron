@@ -9,7 +9,7 @@ save_file = shelve.open(".save_parameters")
 (train_data,
 train_label,
 pred_data,
-pred_label) 		= getDataFromDataset(save_file["datasets_dir"])
+pred_label) = getDataFromDataset(save_file["datasets_dir"])
 mlp = save_file["network"]
 test = mlp.predict(pred_data)
 for i in range(len(test)):
