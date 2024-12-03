@@ -32,7 +32,7 @@ class Affine(ActivationFunction):
 		self.output_size = output_size
 
 	def forward(self, x):
-		self.x = x # too big values
+		self.x = x
 		input_size = x.shape[1]
 		if self.w is None:
 			self.w = np.random.randn(input_size, self.output_size) / np.sqrt(input_size)
@@ -83,6 +83,19 @@ class Softmax(ActivationFunction):
 			else:
 				self.dx[i] = np.array([self.x[i, 0] - 0, self.x[i, 1] - 1])
 		return self.dx
+
+
+class Rectifier(ActivationFunction):
+	def __init__(self):
+		self.x = None
+
+	def forward(self, x):
+		self.x = x
+		return np.maximum(0, x)
+
+	def backward(self, label):
+		return label *(self.x > 0).astype(float)
+
 
 class BinaryCrossEntropy:
 	def forward(self, x, label):
