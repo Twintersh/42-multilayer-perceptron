@@ -16,11 +16,11 @@ class Layer:
 
 class ActivationFunction:
 	def forward (self, x):
-		# need to be set up
+		# need to be set up in other function
 		return x
 
 	def backward (self, dx):
-		# need to be set up
+		# need to be set up in other function
 		return dx
 
 class Affine(ActivationFunction):
@@ -47,7 +47,6 @@ class Affine(ActivationFunction):
 		res = np.dot(dx, self.w.T)
 		return (res)
 
-	# def save_parameters():
 
 class Sigmoid(ActivationFunction):
 	def __init__(self):
@@ -62,7 +61,6 @@ class Sigmoid(ActivationFunction):
 		res = dx * (1 - self.out) * self.out
 		return res
 
-	# def save_parameters():
 
 class Softmax(ActivationFunction):
 	def __init__(self):
@@ -85,7 +83,6 @@ class Softmax(ActivationFunction):
 			else:
 				self.dx[i] = np.array([self.x[i, 0] - 0, self.x[i, 1] - 1])
 		return self.dx
-	# def save_parameters(self, params):
 
 class BinaryCrossEntropy:
 	def forward(self, x, label):
@@ -95,14 +92,3 @@ class BinaryCrossEntropy:
 			loss_sum += label[i] * np.log(prob) + (1 - label[i]) * np.log(1 - prob)
 
 		return (-1) * loss_sum / x.shape[0]
-
-	# def save_parameters(self, params):
-	#     param_dict = {}
-	#     param_dict["layer"] = "BinaryCrossEntropy"
-	#     params.append(param_dict)
-	#     return params
-
-# /home/twinters/42-multilayer-perceptron/layers.py:70: RuntimeWarning: divide by zero encountered in log
-#   loss_sum += label[i] * np.log(prob) + (1 - label[i]) * np.log(1 - prob)
-# /home/twinters/42-multilayer-perceptron/layers.py:70: RuntimeWarning: invalid value encountered in scalar multiply
-#   loss_sum += label[i] * np.log(prob) + (1 - label[i]) * np.log(1 - prob)
