@@ -1,6 +1,7 @@
 # 42-multilayer-percepton
 A machine learning project from the 42 school
 
+dataset contains:
 ```
 		a) radius (mean of distances from center to points on the perimeter)
 		b) texture (standard deviation of gray-scale values)
