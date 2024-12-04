@@ -16,7 +16,7 @@ def train():
 		hidden_layer_size 	= 30
 		l_rate 				= 1e-3
 		batch_size			= 100
-		iterate				= 2500 # number of times we go through the dataset
+		iterate				= 500 # number of times we go through the dataset
 		epochs				= int(len(train_data) / batch_size) + 1
 		loss_history = []
 		loss_pred_history = []
@@ -27,7 +27,6 @@ def train():
 
 		# setting the layers
 		layers = [
-			Layer(Sigmoid, hidden_layer_size, l_rate),
 			Layer(Sigmoid, hidden_layer_size, l_rate),
 			Layer(Sigmoid, hidden_layer_size, l_rate),
 			Layer(Softmax, 2, l_rate),
