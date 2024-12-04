@@ -33,8 +33,8 @@ def predict():
 	print(f"| train data     : {train_data.shape}".ljust(width + 20) + "|")
 	print(f"| validation data: {val_data.shape}".ljust(width + 20) + "|")
 	print("=" * (width + 21))
-	print(f"| accuracy_val   : {accuracy_val:.4f}".ljust(width + 20) + "|")
 	print(f"| accuracy_train : {accuracy_train:.4f}".ljust(width + 20) + "|")
+	print(f"| accuracy_val   : {accuracy_val:.4f}".ljust(width + 20) + "|")
 	print("=" * (width + 21))
 
 
