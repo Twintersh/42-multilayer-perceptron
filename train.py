@@ -6,17 +6,28 @@ from utils import getDataFromDataset
 import matplotlib.pyplot as plt
 import shelve
 from copy import deepcopy
+import configparser
+import argparse
 
-def train():
+parser = argparse.ArgumentParser(description="A program that trains a multilayer perceptron")
+parser.add_argument("-c", "--config", type=str, help="Config file path")
+
+def parseConfigFile(filename):
+	config = configparser.ConfigParser()
+	if filename:
+		config.read(filename)
+		hidden_layer_size = int(config["MLP parameters"]["hidden_layer_size"])
+		l_rate = float(config["MLP parameters"]["l_rate"])
+		batch_size = int(config["MLP parameters"]["batch_size"])
+		iterate = int(config["MLP parameters"]["iterate"])
+	return hidden_layer_size, l_rate, batch_size, iterate
+
+def train(hidden_layer_size, l_rate, batch_size, iterate):
 	with shelve.open(".save_parameters") as save_file:
 		(train_data,
 		train_label,
 		pred_data,
 		pred_label) 		= getDataFromDataset("datasets")
-		hidden_layer_size 	= 30
-		l_rate 				= 1e-3
-		batch_size			= 100
-		iterate				= 500 # number of times we go through the dataset
 		epochs				= int(len(train_data) / batch_size) + 1
 		loss_history = []
 		loss_pred_history = []
@@ -77,4 +88,9 @@ def train():
 
 # call main
 if __name__ == "__main__":
-	train()
+	args = parser.parse_args()
+	if args.config:
+		hidden_layer_size, l_rate, batch_size, iterate = parseConfigFile(args.config)
+		train(hidden_layer_size, l_rate, batch_size, iterate)
+	else:
+		parser.print_help()
