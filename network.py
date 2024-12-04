@@ -25,16 +25,4 @@ class MultilayerPerceptron:
 			res = layer.backward(dx)
 			dx = res
 
-	# def save_parameters(self, save_file):
-	# 	params = []
-	# 	for layer in self.layers:
-	# 		params = layer.save_parameters(params)
-
-	# 	params = self.loss_layer.save_parameters(params)
-	# 	save_data = {}
-	# 	save_data["params"] = params
-	# 	save_data["batch_size"] = self.batch_size
-	# 	with open(save_file, "w") as f:
-	# 		json.dump(save_data, f, indent=4)
-
 
