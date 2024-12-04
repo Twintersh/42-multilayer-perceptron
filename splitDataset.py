@@ -5,7 +5,7 @@ import shelve
 import sys
 
 parser = argparse.ArgumentParser(description="A program that splits a DataSet")
-parser.add_argument("-a", "--split_factor", type=float, help="split factor (default value 0.9)")
+parser.add_argument("-a", "--split_factor", type=float, help="split factor (default value 0.5)")
 
 def linecount(file_path):
 	with open(file_path, 'r') as f:
