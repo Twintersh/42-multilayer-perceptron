@@ -1,16 +1,18 @@
-import numpy as np
-import random
 from layers import BinaryCrossEntropy, Sigmoid, Softmax, Layer
 from network import MultilayerPerceptron
 from utils import getDataFromDataset
+from predict import getAccuracy
+from copy import deepcopy
+import numpy as np
+import random
 import matplotlib.pyplot as plt
 import shelve
-from copy import deepcopy
 import configparser
 import argparse
 
 parser = argparse.ArgumentParser(description="A program that trains a multilayer perceptron")
 parser.add_argument("-c", "--config", type=str, help="Config file path")
+parser.add_argument("-r", "--seed", type=int, help="Set a random seed")
 
 def parseConfigFile(filename):
 	config = configparser.ConfigParser()
@@ -29,8 +31,13 @@ def train(hidden_layer_size, l_rate, batch_size, iterate):
 		pred_data,
 		pred_label) 		= getDataFromDataset("datasets")
 		epochs				= int(len(train_data) / batch_size) + 1
+
 		loss_history = []
 		loss_pred_history = []
+
+		accuracy_train = []
+		accuracy_pred = []
+
 		epochs_history = []
 
 		print(f"training data shape :\t{train_data.shape}")
@@ -73,11 +80,22 @@ def train(hidden_layer_size, l_rate, batch_size, iterate):
 				if not i % (epochs * 100) or i == (iterate * epochs) - 1:
 					print(f"epoch : {nb_epoch}/{iterate}\tloss: {loss:.4f}\tval_loss: {loss_pred:.4f}")
 				nb_epoch += 1
+				accuracy_pred.append(getAccuracy(mlp, pred_data, pred_label))
+				accuracy_train.append(getAccuracy(mlp, train_data, train_label))
 				loss_history.append(loss)
 				loss_pred_history.append(loss_pred)
 				epochs_history.append(i / epochs)
 
 		save_file["network"] = mlp
+
+		# PRINT ACCURACY
+		# plt.plot(epochs_history, accuracy_train, color='red')
+		# plt.plot(epochs_history, accuracy_pred, color='b')
+		# plt.title("accuracy by epoch")
+		# plt.xlabel('epochs')
+		# plt.ylabel('accuracy')
+		# plt.show()
+
 		plt.plot(epochs_history, loss_history, color='red')
 		plt.plot(epochs_history, loss_pred_history, color='b')
 		plt.title("loss function by epoch")
@@ -89,6 +107,9 @@ def train(hidden_layer_size, l_rate, batch_size, iterate):
 # call main
 if __name__ == "__main__":
 	args = parser.parse_args()
+	if args.seed:
+		np.random.seed(args.seed)
+		random.seed(args.seed)
 	if args.config:
 		hidden_layer_size, l_rate, batch_size, iterate = parseConfigFile(args.config)
 		train(hidden_layer_size, l_rate, batch_size, iterate)
