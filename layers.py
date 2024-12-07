@@ -23,6 +23,7 @@ class ActivationFunction:
 		# need to be set up in other function
 		return dx
 
+
 class Affine(ActivationFunction):
 	def __init__(self, output_size, l_rate):
 		self.x = None

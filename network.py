@@ -6,7 +6,6 @@ class MultilayerPerceptron:
 		self.loss_layer = loss_layer
 		self.batch_size = batch_size
 
-
 	def predict(self, x):
 		input_arr = x
 		for layer in self.layers:
@@ -17,7 +16,6 @@ class MultilayerPerceptron:
 	def calculate_loss(self, x, label):
 		res = self.predict(x)
 		return self.loss_layer.forward(res, label)
-
 
 	def backward(self, label):
 		dx = label
