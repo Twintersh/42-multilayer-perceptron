@@ -13,7 +13,6 @@ class Layer:
 		res = self.activation_function.backward(dx)
 		return self.affine.backward(res)
 
-
 class ActivationFunction:
 	def forward (self, x):
 		# need to be set up in other function
@@ -95,7 +94,7 @@ class Rectifier(ActivationFunction):
 		return np.maximum(0, x)
 
 	def backward(self, label):
-		return label *(self.x > 0).astype(float)
+		return label * (self.x > 0).astype(float)
 
 
 class BinaryCrossEntropy:

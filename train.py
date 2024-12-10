@@ -1,8 +1,9 @@
-from layers import BinaryCrossEntropy, Sigmoid, Softmax, Layer
+from layers import *
 from network import MultilayerPerceptron
 from utils import getDataFromDataset
 from predict import getAccuracy
 from copy import deepcopy
+from io import StringIO
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -10,20 +11,48 @@ import shelve
 import configparser
 import argparse
 
+names = {"sigmoid" : Sigmoid, "softmax" : Softmax, "rectifier" : Rectifier}
+
 parser = argparse.ArgumentParser(description="A program that trains a multilayer perceptron")
 parser.add_argument("-c", "--config", type=str, help="Config file path")
 parser.add_argument("-r", "--seed", type=int, help="Set a random seed")
 
-
 def parseConfigFile(filename):
+	layers = []
 	config = configparser.ConfigParser()
-	if filename:
-		config.read(filename)
-		hidden_layer_size = int(config["MLP parameters"]["hidden_layer_size"])
-		l_rate = float(config["MLP parameters"]["l_rate"])
-		batch_size = int(config["MLP parameters"]["batch_size"])
-		iterate = int(config["MLP parameters"]["iterate"])
-	return hidden_layer_size, l_rate, batch_size, iterate
+
+	# pre-process the file to handle newlines
+	with open(filename, 'r') as file:
+		content = file.read().replace('\\\n', ';')
+	config.read_string(content)
+
+	# get the values in the config file
+	try:
+		hidden_layer_size = config.getint("MLP parameters", "hidden_layer_size")
+		l_rate = config.getfloat("MLP parameters", "l_rate")
+		batch_size = config.getint("MLP parameters", "batch_size")
+		iterate = config.getint("MLP parameters", "iterate")
+		activation_functions = [layer.strip().replace('"', '') for layer in config.get("MLP parameters", "layers").split(';') if not layer.strip() == '"']
+
+		print(activation_functions)
+
+		# change the activation_function's strings to actual layer objects
+		for activation_function in activation_functions:
+			activation_function = activation_function.lower()
+			if not activation_function in names:
+				raise("bad activation function name given to layers")
+			else:
+				layers.append(Layer(
+					ActivationFunction = names[activation_function],
+					output_size = 2 if activation_function == "softmax" else hidden_layer_size,
+					l_rate = l_rate
+				))
+
+	except (configparser.NoOptionError, SystemExit) as e:
+		print(f"Error parsing the configuration file: {e}")
+		exit(0)
+
+	return batch_size, iterate, layers
 
 
 def plotGraphs(epochs_history, accuracy_train, accuracy_pred, loss_history, loss_pred_history):
@@ -46,7 +75,7 @@ def plotGraphs(epochs_history, accuracy_train, accuracy_pred, loss_history, loss
 		plt.show()
 
 
-def train(hidden_layer_size, l_rate, batch_size, iterate):
+def train(batch_size, iterate, layers):
 	with shelve.open(".save_parameters") as save_file:
 		(train_data,
 		train_label,
@@ -58,18 +87,10 @@ def train(hidden_layer_size, l_rate, batch_size, iterate):
 		accuracy_train = []
 		accuracy_pred = []
 		epochs_history = []
+		loss_layer = BinaryCrossEntropy()
 
 		print(f"training data shape :\t{train_data.shape}")
 		print(f"prediction data shape :\t{pred_data.shape}")
-
-		# setting the layers
-		layers = [
-			Layer(Sigmoid, hidden_layer_size, l_rate),
-			Layer(Sigmoid, hidden_layer_size, l_rate),
-			Layer(Sigmoid, hidden_layer_size, l_rate),
-			Layer(Softmax, 2, l_rate),
-		]
-		loss_layer = BinaryCrossEntropy()
 
 		# init the MLP with the appropriate layers
 		mlp = MultilayerPerceptron(layers, loss_layer, batch_size)
@@ -117,7 +138,7 @@ if __name__ == "__main__":
 		np.random.seed(args.seed)
 		random.seed(args.seed)
 	if args.config:
-		hidden_layer_size, l_rate, batch_size, iterate = parseConfigFile(args.config)
-		train(hidden_layer_size, l_rate, batch_size, iterate)
+		batch_size, iterate, layers = parseConfigFile(args.config)
+		train(batch_size, iterate, layers)
 	else:
 		parser.print_help()
