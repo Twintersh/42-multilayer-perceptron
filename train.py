@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser(description="A program that trains a multilayer
 parser.add_argument("-c", "--config", type=str, help="Config file path")
 parser.add_argument("-r", "--seed", type=int, help="Set a random seed")
 
+
 def parseConfigFile(filename):
 	config = configparser.ConfigParser()
 	if filename:
@@ -24,6 +25,27 @@ def parseConfigFile(filename):
 		iterate = int(config["MLP parameters"]["iterate"])
 	return hidden_layer_size, l_rate, batch_size, iterate
 
+
+def plotGraphs(epochs_history, accuracy_train, accuracy_pred, loss_history, loss_pred_history):
+		fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+		axes[0].plot(epochs_history, accuracy_train, color='red', label='Train Accuracy')
+		axes[0].plot(epochs_history, accuracy_pred, color='blue', label='Prediction Accuracy')
+		axes[0].set_title("Accuracy by Epoch")
+		axes[0].set_xlabel('Epochs')
+		axes[0].set_ylabel('Accuracy')
+		axes[0].legend()
+
+		axes[1].plot(epochs_history, loss_history, color='red', label='Train Loss')
+		axes[1].plot(epochs_history, loss_pred_history, color='blue', label='Prediction Loss')
+		axes[1].set_title("Loss Function by Epoch")
+		axes[1].set_xlabel('Epochs')
+		axes[1].set_ylabel('Loss')
+		axes[1].legend()
+
+		plt.tight_layout()
+		plt.show()
+
+
 def train(hidden_layer_size, l_rate, batch_size, iterate):
 	with shelve.open(".save_parameters") as save_file:
 		(train_data,
@@ -31,13 +53,10 @@ def train(hidden_layer_size, l_rate, batch_size, iterate):
 		pred_data,
 		pred_label) 		= getDataFromDataset("datasets")
 		epochs				= int(len(train_data) / batch_size) + 1
-
 		loss_history = []
 		loss_pred_history = []
-
 		accuracy_train = []
 		accuracy_pred = []
-
 		epochs_history = []
 
 		print(f"training data shape :\t{train_data.shape}")
@@ -45,6 +64,7 @@ def train(hidden_layer_size, l_rate, batch_size, iterate):
 
 		# setting the layers
 		layers = [
+			Layer(Sigmoid, hidden_layer_size, l_rate),
 			Layer(Sigmoid, hidden_layer_size, l_rate),
 			Layer(Sigmoid, hidden_layer_size, l_rate),
 			Layer(Softmax, 2, l_rate),
@@ -87,21 +107,7 @@ def train(hidden_layer_size, l_rate, batch_size, iterate):
 				epochs_history.append(i / epochs)
 
 		save_file["network"] = mlp
-
-		# PRINT ACCURACY
-		# plt.plot(epochs_history, accuracy_train, color='red')
-		# plt.plot(epochs_history, accuracy_pred, color='b')
-		# plt.title("accuracy by epoch")
-		# plt.xlabel('epochs')
-		# plt.ylabel('accuracy')
-		# plt.show()
-
-		plt.plot(epochs_history, loss_history, color='red')
-		plt.plot(epochs_history, loss_pred_history, color='b')
-		plt.title("loss function by epoch")
-		plt.xlabel('epochs')
-		plt.ylabel('Loss')
-		plt.show()
+		plotGraphs(epochs_history, accuracy_train, accuracy_pred, loss_history, loss_pred_history)
 
 
 # call main
