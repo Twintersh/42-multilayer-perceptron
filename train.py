@@ -24,23 +24,23 @@ def parseConfigFile(filename):
 	# pre-process the file to handle newlines
 	with open(filename, 'r') as file:
 		content = file.read().replace('\\\n', ';')
-	config.read_string(content)
 
 	# get the values in the config file
 	try:
+		config.read_string(content)
 		hidden_layer_size = config.getint("MLP parameters", "hidden_layer_size")
 		l_rate = config.getfloat("MLP parameters", "l_rate")
 		batch_size = config.getint("MLP parameters", "batch_size")
 		iterate = config.getint("MLP parameters", "iterate")
-		activation_functions = [layer.strip().replace('"', '') for layer in config.get("MLP parameters", "layers").split(';') if not layer.strip() == '"']
+		activation_functions = [layer.strip().replace('"', '') for layer in config.get("MLP parameters", "layers").split(';') if not (layer.strip() == '"' or layer.strip() == '')]
 
-		print(activation_functions)
+		print(f"Neural network shape: {activation_functions}")
 
 		# change the activation_function's strings to actual layer objects
 		for activation_function in activation_functions:
 			activation_function = activation_function.lower()
 			if not activation_function in names:
-				raise("bad activation function name given to layers")
+				exit("bad activation function name given to layers")
 			else:
 				layers.append(Layer(
 					ActivationFunction = names[activation_function],
@@ -50,7 +50,7 @@ def parseConfigFile(filename):
 
 	except (configparser.NoOptionError, SystemExit) as e:
 		print(f"Error parsing the configuration file: {e}")
-		exit(0)
+		exit(1)
 
 	return batch_size, iterate, layers
 

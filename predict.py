@@ -16,12 +16,16 @@ def getAccuracy(mlp, data, label):
 
 
 def predict():
-	save_file = shelve.open(".save_parameters")
-	(train_data,
-	train_label,
-	val_data,
-	val_label) = getDataFromDataset("datasets")
-	mlp = save_file["network"]
+	try:
+		save_file = shelve.open(".save_parameters")
+		(train_data,
+		train_label,
+		val_data,
+		val_label) = getDataFromDataset("datasets")
+		mlp = save_file["network"]
+	except Exception as e:
+		print("Error: Please run the train program first")
+		exit(1)
 
 	accuracy_val = getAccuracy(mlp, val_data, val_label)
 	accuracy_train = getAccuracy(mlp, train_data, train_label)
