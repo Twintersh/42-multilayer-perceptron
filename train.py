@@ -15,7 +15,7 @@ names = {"sigmoid" : Sigmoid, "softmax" : Softmax, "rectifier" : Rectifier}
 
 parser = argparse.ArgumentParser(description="A program that trains a multilayer perceptron")
 parser.add_argument("-c", "--config", type=str, help="Config file path")
-parser.add_argument("-r", "--seed", type=int, help="Set a random seed")
+# parser.add_argument("-r", "--seed", type=int, help="Set a random seed")
 
 def parseConfigFile(filename):
 	layers = []
@@ -28,6 +28,17 @@ def parseConfigFile(filename):
 	# get the values in the config file
 	try:
 		config.read_string(content)
+		# get the optional seed value in the config file
+		if config.has_option("MLP parameters", "seed"):
+			print()
+			try:
+				seed = config.getint("MLP parameters", "seed")
+				np.random.seed(seed)
+				random.seed(seed)
+				print(f"Random seed set to {seed}")
+			except ValueError:
+				print("Error: 'seed' in the configuration must be an integer.")
+
 		hidden_layer_size = config.getint("MLP parameters", "hidden_layer_size")
 		l_rate = config.getfloat("MLP parameters", "l_rate")
 		batch_size = config.getint("MLP parameters", "batch_size")
@@ -134,9 +145,6 @@ def train(batch_size, iterate, layers):
 # call main
 if __name__ == "__main__":
 	args = parser.parse_args()
-	if args.seed:
-		np.random.seed(args.seed)
-		random.seed(args.seed)
 	if args.config:
 		batch_size, iterate, layers = parseConfigFile(args.config)
 		train(batch_size, iterate, layers)

@@ -1,5 +1,6 @@
 datasets
 .save_parameters
+about.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
