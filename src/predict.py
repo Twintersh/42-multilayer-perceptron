@@ -4,6 +4,7 @@ from layers import BinaryCrossEntropy, Sigmoid, Softmax, Layer
 from network import MultilayerPerceptron
 from utils import getDataFromDataset
 import shelve
+import os
 
 def getAccuracy(mlp, data, label):
 	pred = mlp.predict(data)
@@ -43,4 +44,7 @@ def predict():
 
 
 if __name__ == "__main__":
+	if not os.path.exists("mlp_material"):
+		print("Error: You must run src/splitDataset.py before doing predictions with the model.")
+		exit(0)
 	predict()
