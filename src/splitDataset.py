@@ -1,11 +1,12 @@
 import os
-from random import random
+import random
 import argparse
 import shelve
 import sys
 
 parser = argparse.ArgumentParser(description="A program that splits a DataSet")
 parser.add_argument("-a", "--split_factor", type=float, help="split factor (default value 0.5)")
+parser.add_argument("-r", "--seed", type=int, help="Set a random seed")
 
 def linecount(file_path):
 	with open(file_path, 'r') as f:
@@ -26,9 +27,10 @@ def main():
 	datasets_dir = "mlp_material"
 	os.makedirs(datasets_dir, exist_ok=True)
 	args = parser.parse_args()
-	# with shelve.open(".save_parameters") as file:
 	if args.split_factor is not None:
 		a = args.split_factor
+	if args.seed:
+		random.seed(args.seed)
 
 	source_file		= "data.csv"
 	train_file		= os.path.join(datasets_dir, "train.csv")
@@ -37,7 +39,7 @@ def main():
 
 	with open(source_file, 'r') as data, open(train_file, 'w') as train, open(predict_file, 'w') as predict:
 		for line in data:
-			if random() < a:
+			if random.random() < a:
 				train.write(line)
 			else:
 				predict.write(line)

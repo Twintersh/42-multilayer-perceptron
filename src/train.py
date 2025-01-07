@@ -14,7 +14,7 @@ import os
 
 parser = argparse.ArgumentParser(description="A program that trains a multilayer perceptron")
 parser.add_argument("-c", "--config", type=str, help="Config file path")
-# parser.add_argument("-r", "--seed", type=int, help="Set a random seed")
+parser.add_argument("-r", "--seed", type=int, help="Set a random seed")
 
 def train(batch_size, iterate, layers, patience):
 	with shelve.open("mlp_material/save_parameters") as save_file:
@@ -82,6 +82,9 @@ if __name__ == "__main__":
 	if not os.path.exists("mlp_material"):
 		print("Error: You must run src/splitDataset.py before training the model.")
 		exit(0)
+	if args.seed:
+		random.seed(args.seed)
+		np.random.seed(args.seed)
 	if args.config:
 		batch_size, iterate, layers, patience = parseConfigFile(args.config)
 		train(batch_size, iterate, layers, patience)
