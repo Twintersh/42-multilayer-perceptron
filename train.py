@@ -127,8 +127,6 @@ def train(batch_size, iterate, layers):
 			loss = mlp.calculate_loss(batch_data, batch_label)
 			loss_pred = deepcopy(mlp).calculate_loss(batch_pred, batch_pred_label)
 
-			# implement early stopping here
-
 			mlp.backward(batch_label)
 			# each time i go through the entire dataset (approximation), print loss
 			if not i % epochs or i == (iterate * epochs) - 1:
