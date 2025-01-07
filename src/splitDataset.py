@@ -23,12 +23,12 @@ def moveLines(extract, load, nb):
 
 def main():
 	a = 0.50 # default split
-	datasets_dir = "datasets"
-	args = parser.parse_args()
-	with shelve.open(".save_parameters") as file:
-		if args.split_factor is not None:
-			a = args.split_factor
+	datasets_dir = "mlp_material"
 	os.makedirs(datasets_dir, exist_ok=True)
+	args = parser.parse_args()
+	# with shelve.open(".save_parameters") as file:
+	if args.split_factor is not None:
+		a = args.split_factor
 
 	source_file		= "data.csv"
 	train_file		= os.path.join(datasets_dir, "train.csv")
@@ -41,6 +41,7 @@ def main():
 				train.write(line)
 			else:
 				predict.write(line)
+
 	if linecount(train_file) > waited_len:
 		moveLines(train_file, predict_file, waited_len)
 	elif linecount(train_file) < waited_len:
