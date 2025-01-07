@@ -4,6 +4,7 @@ from layers import BinaryCrossEntropy, Sigmoid, Softmax, Layer
 from network import MultilayerPerceptron
 from utils import getDataFromDataset
 import shelve
+import os
 
 def getAccuracy(mlp, data, label):
 	pred = mlp.predict(data)
@@ -17,11 +18,11 @@ def getAccuracy(mlp, data, label):
 
 def predict():
 	try:
-		save_file = shelve.open(".save_parameters")
+		save_file = shelve.open("mlp_material/save_parameters")
 		(train_data,
 		train_label,
 		val_data,
-		val_label) = getDataFromDataset("datasets")
+		val_label) = getDataFromDataset("mlp_material")
 		mlp = save_file["network"]
 	except Exception as e:
 		print("Error: Please run the train program first")
@@ -43,4 +44,7 @@ def predict():
 
 
 if __name__ == "__main__":
+	if not os.path.exists("mlp_material"):
+		print("Error: You must run src/splitDataset.py before doing predictions with the model.")
+		exit(0)
 	predict()

@@ -3,6 +3,7 @@ import numpy as np
 import os
 from sklearn.preprocessing import StandardScaler
 from typing import Tuple
+import matplotlib.pyplot as plt
 
 def setLabelsValues(label_array: np.array) -> np.array:
 	label_mapping = {'M': 1, 'B': 0}
@@ -53,3 +54,22 @@ def getDataFromDataset(foldername: str) -> Tuple[np.array, np.array, np.array, n
 	except Exception as e:
 		print(f"An error occurred while processing the dataset: {e}")
 		exit(1)
+
+def plotGraphs(epochs_history, accuracy_train, accuracy_pred, loss_history, loss_pred_history):
+		fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+		axes[0].plot(epochs_history, accuracy_train, color='red', label='Train Accuracy')
+		axes[0].plot(epochs_history, accuracy_pred, color='blue', label='Prediction Accuracy')
+		axes[0].set_title("Accuracy by Epoch")
+		axes[0].set_xlabel('Epochs')
+		axes[0].set_ylabel('Accuracy')
+		axes[0].legend()
+
+		axes[1].plot(epochs_history, loss_history, color='red', label='Train Loss')
+		axes[1].plot(epochs_history, loss_pred_history, color='blue', label='Prediction Loss')
+		axes[1].set_title("Loss Function by Epoch")
+		axes[1].set_xlabel('Epochs')
+		axes[1].set_ylabel('Loss')
+		axes[1].legend()
+
+		plt.tight_layout()
+		plt.show()
